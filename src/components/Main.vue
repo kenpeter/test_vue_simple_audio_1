@@ -1,5 +1,15 @@
 <template>
+  <!-- transform scale, 300/190 -->
   <div id="main" :style="{'background-color': bgColor,'transform':'scale(' + (parseInt(width)/190) +')'}">
+    <div class="player-panel">
+      <div class="player-panel-details">
+        <!-- title is used for the element -->
+        <div class="player-panel-title text-ellipsis" :title="currentAudio.songname">
+          {{currentAudio.songname}}
+        </div>
+      </div>  
+    </div>
+    
     
   </div>
   </div>
@@ -11,7 +21,12 @@
 export default {
   // props, css props
   props: {
+    // current music index
+    current: 0,
   
+    // width of player
+    // type string
+    // default 300
     width: {
       type: String,
       default: '300'
@@ -25,8 +40,15 @@ export default {
     },
   },
   name: 'main',
+  computed: {
+    currentAudio: function () {
+      return this.songs[this.audioIndex];
+    }
+  },
   data () {
     return {
+      audioIndex: 0,
+    
       songs: [
         {
           'url': 'http://stream.shopshop.space/audio/不会弹吉他的吉他侠_《友情岁月》_161120.mp3',
