@@ -1,0 +1,10 @@
+.player-controls {
+  
+}
+
+.player-prev,
+.player-pause,
+.player-next
+{
+  cursor: pointer;
+}

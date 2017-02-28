@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "favicons-webpack-plugin": "^0.0.7",
+    "mint-range": "^0.0.4",
     "vue": "^2.2.1",
     "vue-router": "^2.2.0",
     "vue-simple-audio": "^1.0.6"

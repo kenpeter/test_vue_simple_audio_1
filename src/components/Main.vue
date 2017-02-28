@@ -1,28 +1,89 @@
 <template>
   <!-- transform scale, 300/190 -->
   <div id="main" :style="{'background-color': bgColor,'transform':'scale(' + (parseInt(width)/190) +')'}">
+    
+    <!-- player panel -->
     <div class="player-panel">
       <div class="player-panel-details">
         <!-- title is used for the element -->
+        <!-- very first element -->
         <div class="player-panel-title text-ellipsis" :title="currentAudio.songname">
           {{currentAudio.songname}}
         </div>
+        
+        <!-- current time and total time -->
+        <div class="player-panel-time">
+          <span class="player-time-current">{{ current }}</span>
+          <span class="player-time-total">of {{ duration }}</span>
+        </div>
+        
+        <!-- clean -->
+        <div style="clear: both"></div>
+        
+        <div class="player-controls">
+          
+            <span class="player-prev" @click="prev()">Prev</span> |
+          
+            <!-- @click -->
+            <!-- func -->
+            <!-- :class ->
+            <!-- 'xxxx' isPause -->
+            <span class="player-pause" @click="toggleStatus()" :class="{'player-play':isPause}"> > </span> |
+          
+            <span class="player-next" @click="next()">Next</span>
+          
+        </div>
+        
       </div>  
     </div>
     
+    <!-- player control -->
+    <div class="player-controls">
     
-  </div>
+      <div style="clear: both"></div>
+      
+      <div class="player-range">
+        
+        
+      </div>
+      
+    </div>
+    
+    <!-- audio -->
+    <!-- ended, means song ends -->
+    <audio 
+      :src="currentAudio.url" 
+      :autoplay="autoPlay"
+      :loop="loop"
+      @timeupdate="timeChange()"
+      
+      @loadeddata="getDuration()"
+      @ended="next()"
+      @error="next()"
+      
+      id="player" 
+      ref="player"
+      
+    >
+    </audio>
   </div>
 </template>
 
 
 <!-- es 6 script -->
 <script type="es6">
+
+import '../assets/css/style.css';
+
 export default {
+
   // props, css props
   props: {
-    // current music index
-    current: 0,
+    
+    autoPlay: {
+      type: Boolean,
+      default: true
+    },
   
     // width of player
     // type string
@@ -36,24 +97,105 @@ export default {
     // default white
     bgColor: {
       type: String,
-      default: '#000000'
+      default: '#ffffff'
+    },
+    // loop
+    // type boolean
+    // default
+    // false
+    loop: {
+      type: Boolean,
+      default: false
+    },
+    // repeat
+    // type
+    // boolean
+    // default
+    // true
+    repeat: {
+      type: Boolean,
+      default: true
     },
   },
+  // name of this
   name: 'main',
   computed: {
     currentAudio: function () {
+      // when data changes, data, props, computed redo it.
       return this.songs[this.audioIndex];
+    }
+  },
+  // methods
+  methods: {
+    // basically, it keeps updating this.current, it knows where the music's position
+    // time change
+    // : func
+    timeChange: function () {
+      // this current, data
+      // this
+      // $refs
+      // player
+      // current time
+      this.current = this.$refs.player.currentTime;
+    },
+    // all data is loaded.
+    getDuration: function () {
+      this.duration = this.$refs.player.duration;
+    },
+    toggleStatus: function () {
+      // var player
+      // this
+      // $refs
+      // players
+      // this isPause
+      // player.play otherwise player pause
+      var player = this.$refs.player;
+      this.isPause ? player.play() : player.pause();
+      // invert is pause
+      this.isPause = !this.isPause;
+    },
+    // next func
+    next: function () {
+      // if this
+      // audio index
+      // this songs
+      // length - 1
+      if (this.audioIndex == this.songs.length - 1) {
+        if (this.repeat) {
+          // Back to start of songs
+          this.audioIndex = 0;
+        }
+      } else {
+        //
+        this.audioIndex++;
+      }
+    },
+    prev: function () {
+      // if this
+      // audio index
+      // this songs
+      // length - 1
+      if (this.audioIndex == 0) {
+        if (this.repeat) {
+          // Back to end of songs
+          this.audioIndex = this.songs.length - 1;
+        }
+      } else {
+        //
+        this.audioIndex--;
+      }
     }
   },
   data () {
     return {
+      // current music index
+      current: 0,
       audioIndex: 0,
+      duration: 0,
+      isPause: !this.autoPlay, // props
+      
     
       songs: [
-        {
-          'url': 'http://stream.shopshop.space/audio/不会弹吉他的吉他侠_《友情岁月》_161120.mp3',
-          'songname': '《友情岁月》_161120'
-        },
         {
           'url': 'http://stream.shopshop.space/audio/蒙面唱将猜猜猜_EP10_快要崩溃的一哥_感觉自己萌萌哒_《你怎么舍得我难过》_161120.mp3',
           'songname': '《你怎么舍得我难过》_161120'
