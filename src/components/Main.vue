@@ -1,7 +1,7 @@
 <template>
   <!-- transform scale, 300/190 -->
   <div id="main" :style="{'background-color': bgColor,'transform':'scale(' + (parseInt(width)/190) +')'}">
-    
+
     <!-- player panel -->
     <div class="player-panel">
       <div class="player-panel-details">
@@ -10,22 +10,22 @@
         <div class="player-panel-title text-ellipsis" :title="currentAudio.songname">
           {{currentAudio.songname}}
         </div>
-        
+
         <!-- current time and total time -->
         <div class="player-panel-time">
           <span class="player-time-current">{{ current }}</span>
           <span class="player-time-total">of {{ duration }}</span>
         </div>
-        
+
         <!-- clean -->
         <div style="clear: both"></div>
-        
+
         <div class="player-controls">
-          
+
             <span class="player-prev" @click="prev()">
               <i class="fa fa-step-backward" aria-hidden="true"></i>
             </span>&nbsp;
-          
+
             <!-- @click -->
             <!-- func -->
             <!-- :class ->
@@ -33,62 +33,64 @@
             <span class="player-pause" @click="toggleStatus()" :class="{'player-play':isPause}">
               <i class="fa fa-play" aria-hidden="true"></i>
             </span>&nbsp;
-          
+
             <span class="player-next" @click="next()">
               <i class="fa fa-step-forward" aria-hidden="true"></i>
             </span>
-          
+
             <div class="slider player-progress-bar">
               <div>
                 <i class="fa fa-spinner" aria-hidden="true"></i>
-                <input 
+                <input
                   type="range"
-                  
+
                   :min="0"
                   :max="duration"
                   :value="current"
                   :step="1"
-                  
+
                   @mouseup="progressChange($event)"
                 />
               </div>
             </div>
-            
+
             <div class="slider player-volume">
               <div>
                 <i class="fa fa-volume-up" aria-hidden="true"></i>
-                <input 
+                <input
                   type="range"
-                  
-                  :min="0" 
+
+                  :min="0"
                   max="100"
-                  :value="volume" 
+                  :value="volume"
                   :step="1"
-                  
+
                   v-model="volume"
                 />
-              </div>  
+              </div>
             </div>
         </div>
-        
-      </div>  
+
+      </div>
     </div>
-    
+
+    <songList></songList>
+
     <!-- audio -->
     <!-- ended, means song ends -->
-    <audio 
-      :src="currentAudio.url" 
+    <audio
+      :src="currentAudio.url"
       :autoplay="autoPlay"
       :loop="loop"
       @timeupdate="timeChange()"
-      
+
       @loadeddata="getDuration()"
       @ended="next()"
       @error="next()"
-      
-      id="player" 
+
+      id="player"
       ref="player"
-      
+
     >
     </audio>
   </div>
@@ -99,18 +101,19 @@
 <script type="es6">
 
 import '../assets/css/style.css';
+import SongList from './SongList.vue';
 
 export default {
 
   // props, css props
   props: {
-    
+
     // auto play true
     autoPlay: {
       type: Boolean,
       default: true
     },
-  
+
     // width of player
     // type string
     // default 300
@@ -188,7 +191,7 @@ export default {
       }
     },
     progressChange($event) {
-      // 
+      //
       //console.log("progress change");
       //console.log($event.target.value);
       this.$refs.player.currentTime = $event.target.value;
@@ -196,7 +199,7 @@ export default {
   },
   mounted: function () {
     this.$refs.player.volume = this.volume / 10;
-    
+
     //console.log("volume");
     //console.log(this.$refs.player.volume);
   },
@@ -207,6 +210,9 @@ export default {
       this.$refs.player.volume = val / 100;
     }
   },
+  components:{
+    songList: SongList
+  },
   data () {
     return {
       RANGE_WIDTH: 180,
@@ -215,9 +221,9 @@ export default {
       audioIndex: 0,
       duration: 0,
       isPause: !this.autoPlay, // props
-      
+
       volume: parseInt(this.initialVolume) / 10,
-    
+
       songs: [
         {
           'url': 'http://stream.shopshop.space/audio/蒙面唱将猜猜猜_EP10_快要崩溃的一哥_感觉自己萌萌哒_《你怎么舍得我难过》_161120.mp3',
