@@ -37,13 +37,13 @@
                 Progress:
                 <input 
                   type="range"
-                  :min="0" 
-                  :step="1"
-                  v-model="current"
                   
-                  :value="current"
+                  :min="0"
                   :max="duration"
-                  @onmouseup="progressChange()"
+                  :value="current"
+                  :step="1"
+                  
+                  @mouseup="progressChange($event)"
                 />
               </div>
             </div>
@@ -51,24 +51,21 @@
             <div class="slider player-volume">
               <div>
                 Volume:
-                <input type="range" :value="0" max="100" />
+                <input 
+                  type="range"
+                  
+                  :min="0" 
+                  max="100"
+                  :value="volume" 
+                  :step="1"
+                  
+                  v-model="volume"
+                />
               </div>  
             </div>
         </div>
         
       </div>  
-    </div>
-    
-    <!-- player control -->
-    <div class="player-controls">
-    
-      <div style="clear: both"></div>
-      
-      <div class="player-range">
-        
-        
-      </div>
-      
     </div>
     
     <!-- audio -->
@@ -184,22 +181,26 @@ export default {
         this.audioIndex--;
       }
     },
-    progressChange() {
-      console.log("progress change");
+    progressChange($event) {
+      // 
+      //console.log("progress change");
+      //console.log($event.target.value);
+      this.$refs.player.currentTime = $event.target.value;
     },
   },
   mounted: function () {
     this.$refs.player.volume = this.volume / 10;
+    
+    //console.log("volume");
+    //console.log(this.$refs.player.volume);
   },
-  /*
   watch: {
-    current: function(val, oldVal) {
+    volume: function(val, oldVal) {
       // https://stackoverflow.com/questions/33257379/how-to-fire-an-event-when-v-model-changes-vue-js
       //console.log(val);
-      this.$refs.player.currentTime = val;
+      this.$refs.player.volume = val / 100;
     }
   },
-  */
   data () {
     return {
       RANGE_WIDTH: 180,
