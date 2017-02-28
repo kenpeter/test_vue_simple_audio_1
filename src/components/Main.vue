@@ -32,6 +32,28 @@
           
             <span class="player-next" @click="next()">Next</span>
           
+            <div class="slider player-progress-bar">
+              <div>
+                Progress:
+                <input 
+                  type="range"
+                  :min="0" 
+                  :step="1"
+                  v-model="current"
+                  
+                  :value="current"
+                  :max="duration"
+                  @onmouseup="progressChange()"
+                />
+              </div>
+            </div>
+            
+            <div class="slider player-volume">
+              <div>
+                Volume:
+                <input type="range" :value="0" max="100" />
+              </div>  
+            </div>
         </div>
         
       </div>  
@@ -80,6 +102,7 @@ export default {
   // props, css props
   props: {
     
+    // auto play true
     autoPlay: {
       type: Boolean,
       default: true
@@ -116,84 +139,77 @@ export default {
       type: Boolean,
       default: true
     },
+    initialVolume: {
+      type: String,
+      default: '60'
+    }
   },
   // name of this
   name: 'main',
   computed: {
     currentAudio: function () {
+      //console.log("call current audio");
       // when data changes, data, props, computed redo it.
       return this.songs[this.audioIndex];
     }
   },
   // methods
   methods: {
-    // basically, it keeps updating this.current, it knows where the music's position
-    // time change
-    // : func
     timeChange: function () {
-      // this current, data
-      // this
-      // $refs
-      // player
-      // current time
       this.current = this.$refs.player.currentTime;
     },
-    // all data is loaded.
     getDuration: function () {
       this.duration = this.$refs.player.duration;
     },
     toggleStatus: function () {
-      // var player
-      // this
-      // $refs
-      // players
-      // this isPause
-      // player.play otherwise player pause
       var player = this.$refs.player;
       this.isPause ? player.play() : player.pause();
-      // invert is pause
       this.isPause = !this.isPause;
     },
-    // next func
     next: function () {
-      // if this
-      // audio index
-      // this songs
-      // length - 1
       if (this.audioIndex == this.songs.length - 1) {
         if (this.repeat) {
-          // Back to start of songs
           this.audioIndex = 0;
         }
       } else {
-        //
         this.audioIndex++;
       }
     },
     prev: function () {
-      // if this
-      // audio index
-      // this songs
-      // length - 1
       if (this.audioIndex == 0) {
         if (this.repeat) {
-          // Back to end of songs
           this.audioIndex = this.songs.length - 1;
         }
       } else {
-        //
         this.audioIndex--;
       }
+    },
+    progressChange() {
+      console.log("progress change");
+    },
+  },
+  mounted: function () {
+    this.$refs.player.volume = this.volume / 10;
+  },
+  /*
+  watch: {
+    current: function(val, oldVal) {
+      // https://stackoverflow.com/questions/33257379/how-to-fire-an-event-when-v-model-changes-vue-js
+      //console.log(val);
+      this.$refs.player.currentTime = val;
     }
   },
+  */
   data () {
     return {
+      RANGE_WIDTH: 180,
       // current music index
       current: 0,
       audioIndex: 0,
       duration: 0,
       isPause: !this.autoPlay, // props
       
+      volume: parseInt(this.initialVolume) / 10,
     
       songs: [
         {
