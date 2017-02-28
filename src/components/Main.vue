@@ -22,19 +22,25 @@
         
         <div class="player-controls">
           
-            <span class="player-prev" @click="prev()">Prev</span> |
+            <span class="player-prev" @click="prev()">
+              <i class="fa fa-step-backward" aria-hidden="true"></i>
+            </span>&nbsp;
           
             <!-- @click -->
             <!-- func -->
             <!-- :class ->
             <!-- 'xxxx' isPause -->
-            <span class="player-pause" @click="toggleStatus()" :class="{'player-play':isPause}"> > </span> |
+            <span class="player-pause" @click="toggleStatus()" :class="{'player-play':isPause}">
+              <i class="fa fa-play" aria-hidden="true"></i>
+            </span>&nbsp;
           
-            <span class="player-next" @click="next()">Next</span>
+            <span class="player-next" @click="next()">
+              <i class="fa fa-step-forward" aria-hidden="true"></i>
+            </span>
           
             <div class="slider player-progress-bar">
               <div>
-                Progress:
+                <i class="fa fa-spinner" aria-hidden="true"></i>
                 <input 
                   type="range"
                   
@@ -50,7 +56,7 @@
             
             <div class="slider player-volume">
               <div>
-                Volume:
+                <i class="fa fa-volume-up" aria-hidden="true"></i>
                 <input 
                   type="range"
                   
